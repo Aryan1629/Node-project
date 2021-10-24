@@ -1,0 +1,31 @@
+<%- include("./partials/header.ejs")%>
+<link rel="stylesheet" href="/styles/nav.css">
+<script  src="/javascript/nav.js"></script>
+
+<h1  class="header">Fruits For You</h1>
+<!-- card section  -->
+<link rel="stylesheet" href="/styles/products.css">
+<div class="container">
+<% for(i=0;i<pro.length;i++) {%>
+ <a href="/showpage/<%= pro[i]._id%>">
+    <div class="card">
+        <div class="productImg">
+            <img src="<%=pro[i].img%>" />
+        </div>
+        <div class="cardBody">
+            <div class="row">
+                <h4><%= pro[i].name%></h4>
+                <h4>price :&#8377; <%= pro[i].price %></h4>
+            </div>
+            <p>
+               <%= pro[i].des.substring(0, 80)%>.... <a style="color: blue;" href="/showpage/<%= pro[i].id%>?id=<%= pro[i].id%>" >Read More</a>
+            </p>
+        </div>
+    </div>
+</a>
+<%}%>
+</div>
+<script>
+    
+</script>
+<%- include("./partials/footer.ejs")%>

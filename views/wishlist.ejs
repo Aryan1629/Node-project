@@ -1,0 +1,38 @@
+
+<%- include("./partials/header.ejs")%>
+<link rel="stylesheet" href="/styles/nav.css">
+<script src="/javascript/nav.js"></script>
+<link rel="stylesheet" href="/styles/wishlist.css">
+<div class="wishbdy">
+  <h1 style="text-align: center;">Wishlist</h1>
+    <div id="wishcontainer">
+        <div class="wishcards">
+          <img src="/images/apple.jpeg" alt="">
+          <div class="details">
+            <h3>  <b> product name</b> </h3>
+            <h4 ><b style="color: green;">product price</b></h4>
+            <button class="action" onclick="show()"> View Product</button>
+          </div>
+        </div>
+    </div>
+</div>
+<%- include("./partials/footer.ejs")%>
+<script>
+  const wishdata=JSON.parse(localStorage.getItem("wishdata"))
+  document.getElementById("wishcontainer").innerHTML=wishdata.map(elem=>`
+  <div id="wishcontainer">
+        <div class="wishcards">
+          <img src="${elem.img}" alt="">
+          <div class="details">
+            <h3>  <b> ${elem.name} </b> </h3>
+            <h4 ><b style="color: green;">Rs ${elem.price}</b > </h4>
+            <button class="action" id="${elem._id}"> View Product</button>
+          </div>
+        </div>
+    </div>
+  
+  `)
+  wishdata.forEach((element,index)=>{
+    document.getElementById(`${element._id}`).addEventListener("click",()=>location.href=`/showpage/${element._id}`)
+  })
+  </script>

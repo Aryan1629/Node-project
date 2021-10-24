@@ -1,0 +1,46 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.wishbdy{
+    margin-top: 60px;
+}
+#wishcontainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.wishcards{
+    margin:20px ;
+    display: flex;
+    align-items: center;
+    width:340px;
+    border: 3px solid #b33939;
+    border-top: 3px solid #ffda79;
+    border-left:  3px solid  #27ae60;
+    padding: 0 10px;
+    box-shadow: 5px 5px 10px 1px rgba(206, 21, 21, 0.411);
+
+}
+.wishcards img{
+    width: 10rem;
+    height: 10rem;
+}
+.details{
+    margin-left: 10px;
+
+}
+.details *{
+    margin: 10px;
+}
+.action{
+    width: 100%;
+    background-color: #b71540;;
+            color:white;
+            padding: 5px 18px;
+            margin: 8px 0;
+             border: 1px solid #f8f8f8;
+}

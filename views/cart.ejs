@@ -1,0 +1,111 @@
+<%- include("./partials/header.ejs")%>
+<link rel="stylesheet" href="/styles/nav.css">
+<link rel="stylesheet" href="/styles/cart.css">
+<script src="/javascript/nav.js"></script>
+<body>
+    <div id="message">
+    </div>
+    <div class="cartheading">
+       <h1><u> Your Cart</u></h1>
+    </div>
+   <div id="cartdocument" >
+            <div class="cartitemholder"id="carteditems">   
+        <div class="nothing">
+            <h1> Nothing In Cart </h1>
+            <a href="/products"> <button> Shop Now </button>  </a>
+            </div>
+    </div>
+       <div class="shippingaction" id="action"> 
+       </div>
+   </div>
+<%- include("./partials/footer.ejs")%>
+<script> 
+const userinfo=JSON.parse(localStorage.getItem(`userInfo`))
+let ammount=0;
+document.getElementById("message").style.display="none" 
+  let cartitem= JSON.parse(localStorage.getItem("cart"))         // taking data from localstorage
+   console.log(cartitem)
+   cartitem.length==0?(
+   document.getElementById("cartdocument").innerHTML=`
+        <div class="nothing">
+         <h1> Nothing In Cart </h1>
+         <a href="/products"> <button> Shop Now </button>  </a>
+         </div>
+        `   
+   ):(
+  document.getElementById("carteditems").innerHTML=cartitem.map((cart_products,index)=>{       //adding localstorage cartitems into client document screen
+    ammount=ammount+cart_products.quantity*Number(cart_products.price.split("/")[0])
+    return (`
+        <div class= "cartrow" id=${this.cart_products}>
+        <div class="cartedproduct">
+                    <img src="${cart_products.img}" alt="">
+                    <a href="/showpage/${cart_products._id}"><span> ${cart_products.name}</span> </a>
+                </div>
+                <div class="itemdetails">
+                    quantity  : ${cart_products.quantity + "   " +cart_products.price.split("/")[1]}  (
+                   &#8377;  ${cart_products.price.split("/")[0]} X ${cart_products.quantity}=
+                    &#8377; ${Number(cart_products.price.split("/")[0])*cart_products.quantity}  )
+                </div>
+                <div class="buttons">
+                    <div class="change_qty , act">
+                        <button id="add${index}" > +</button>
+                        <span> ${cart_products.quantity} </span>
+                        <button id="sub${index}" onclick="sub()"> - <?button>
+                    </div>
+                    <button class="act"id="${index}">
+                        Delete
+                </button>
+                </div>
+            </div>
+        </div>
+        `)    
+    }),
+    document.getElementById("action").innerHTML=`
+<div class="action">
+                 <div class="row">
+                     <span> Total Items</span>
+                     <span id="items"> ${cartitem.length} </span>
+                 </div>
+                    <div class="row">
+                        <span> Total Amount</span>
+                    <span id="Total" > &#8377;${ammount} </span>
+                    </div>
+                   ${
+                       localStorage.getItem("userInfo")?
+                       `<a href="/shipping/${userinfo.token}"> <button> Shop Now</button> </a>`
+                       :
+                       ` <a href="/sign-in?shipping"> <button> Shop Now</button></a>`
+                   }
+             </div>  
+`);
+cartitem.forEach( (element ,index, array)=>{    // activating delete button of all added items  to get deleted and remove form local storage
+      document.getElementById(`add${index}`).addEventListener("click",()=>{   // activating add button to increase the quantity of producty byc 1
+           if(element.quantity<element.instock){   // adding only when  selected qyantity is less than or equal to the quantity present in stock
+            element.quantity=element.quantity+1;  /// element mean the item prresnt in cart array  
+            localStorage.setItem("cart",JSON.stringify(cartitem)) // updating the cart in localstorage
+            location.reload(true) 
+           }else{     // bassing one message when use try to add more quantity than present in stock 
+               document.getElementById("message").style.display="flex"
+                document.getElementById("message").innerHTML=`<h2> Sorry! not in stock</h2>`
+              setTimeout(() =>  document.getElementById("message").style.display="none",1500); // setting  that for how much second the message will apear
+           }        
+        }); 
+    document.getElementById(`sub${index}`).addEventListener("click",()=>{   // actiating substract button to decrease the selected quantity by 1
+        if(element.quantity>1){    
+            element.quantity=element.quantity-1;
+            console.log(element.quantity);
+            localStorage.setItem("cart",JSON.stringify(cartitem))
+            location.reload(true)
+           }
+    })
+    document.getElementById(`${index}`).addEventListener("click",()=>{    //activating the button to delete the item from cart
+             cartitem.length==1?array.pop(): array.splice(index,1)    //renoving from local storge cart array
+             location.reload(true)       // reloading the page
+             document.getElementById("message").style.display="flex"    // design just show animation of delete
+             document.getElementById("message").innerHTML=``;
+              setTimeout(() =>  document.getElementById("message").style.display="none",1500);
+             localStorage.setItem("cart",JSON.stringify(cartitem))
+          })
+}) 
+
+</script>

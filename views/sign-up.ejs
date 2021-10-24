@@ -1,0 +1,69 @@
+<script>
+    if(localStorage.getItem("userInfo"))
+    location.href="/products"
+</script>
+<%- include("./partials/header.ejs")%>
+<link rel="stylesheet" href="/styles/nav.css">
+<script src="/javascript/nav.js"></script>
+<link rel="stylesheet" href="/styles/sign.css">
+<div class="formContainer">
+    <form onsubmit="return register()">
+        <h2 style="text-align: center;">Register</h2>
+        <label>Name</label>
+        <input type="text" name="username" requiredddd==  onchange="val(this)" placeholder="name"   />
+        <label>Email</label>
+        <input type="email" name="email" required  onchange="val(this)" placeholder="email" />
+        <label>Password</label>
+        <input type="password" name="password" required  onchange="val(this)" placeholder="password" />
+        <label>Confirm password </label>
+        <input type="password" name="confirmPassword"  id="confirm" required  onchange="val(this)" placeholder="Confirm password" />
+        <div id="msg"></div>
+        <button type="submit">Register</button>
+        <p style="margin-bottom: 40px;">Existing user ? <a href="/sign-in">SignIn</a></p>
+    </form>
+</div>
+<%-include("./partials/spinner.ejs")%>
+<%- include("./partials/footer.ejs")%>
+<script>
+    document.getElementById("loader").style.display="none";
+    let userDetails={
+        name:"aryan",
+        email:"akljdfkl"
+    }
+   const val=(e)=>{
+   
+       if(e.name=="username")
+       userDetails.name=e.value                                                                                                                                                                                  
+       else if(e.name=="email")
+          userDetails.email=e.value;
+       else if(e.name=="password")
+            userDetails.password=e.value
+      else if(e.name=="confirmPassword")
+          userDetails.confirmPassword=e.value
+   }
+   const register=()=>{
+    document.getElementById("msg").innerHTML="  "
+    document.getElementById("loader").style.display="block";
+       if(userDetails.confirmPassword==userDetails.password){ 
+        fetch(`${location.origin}/sign-up`,{
+             method:"POST",
+             headers:new Headers({
+                 "Content-Type":"application/json"
+             }),
+             body:JSON.stringify(userDetails)
+         }).then(res=>{res.json().then(data=>{
+            document.getElementById("loader").style.display="none";
+             if(data.email==userDetails.email)
+            {  location.search?location.href=`/shipping/${data.token}`:location.href="/products"
+                localStorage.setItem("userInfo",JSON.stringify(data))      
+            } else
+             document.getElementById("msg").innerHTML=data
+            }
+         )})
+       }else{document.getElementById("loader").style.display="none";
+        document.getElementById("msg").innerHTML="password and Confirm-Password does not match please try again"
+        document.getElementById("confirm").style.border="1px solid red"
+       }
+       return false
+   }
+</script>

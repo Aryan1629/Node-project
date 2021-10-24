@@ -1,0 +1,51 @@
+<%- include("./partials/header.ejs")%>
+<link rel="stylesheet" href="/styles/nav.css">
+<script src="/javascript/nav.js"></script>
+<link rel="stylesheet" href="/styles/sign.css">
+<div class="formContainer">
+    <form onsubmit="return shipping()">
+        <h2 style="text-align: center;">Shipping Details</h2>
+        <label>Phone</label>
+        <input type="tel" name="Phone" required  onchange="val(this)" placeholder="Phone"   />
+        <label>Address</label>
+        <input type="Address" name="Address" required  onchange="val(this)" placeholder="Address" />
+        <label>City</label>
+        <input type="text" name="City"required  onchange="val(this)" placeholder="City" />
+        <label>State </label>
+        <input type="text" name="State" required  onchange="val(this)" placeholder="State" />
+        <label>Pincode </label>
+        <input type="tel" name="Pincode"  id="confirm" required  onchange="val(this)" placeholder="Pincode" />
+        <div id="msg"></div>
+        <button type="submit">Register</button>
+        <p style="margin-bottom: 40px;">Existing user ? <a href="/sign-in">SignIn</a></p>
+    </form>
+</div>
+<!-- <%-include("./partials/spinner.ejs")%> -->
+
+<%- include("./partials/footer.ejs")%>
+<script>
+    const shippingDetails={
+       
+        Address:"",
+        City:"",
+        State:"",
+    }
+    const val=(e)=>{
+        console.log(e.name)
+        if(e.name=="Phone")
+          shippingDetails.Phone=e.value
+       else if(e.name=="Address")
+          shippingDetails.Address=e.value
+       else if(e.name=="City")
+         shippingDetails.City=e.value
+        else if(e.name=="State")
+        shippingDetails.State=e.value
+       else if(e.name=="Pincode")
+        shippingDetails.Pincode=e.value
+    }
+const shipping=()=>{
+     localStorage.setItem("shippingInfo",JSON.stringify(shippingDetails))
+      location.href=`/order/${ JSON.parse(localStorage.getItem("userInfo")).token}`
+      return false
+}
+</script>

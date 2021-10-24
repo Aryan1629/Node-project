@@ -1,0 +1,62 @@
+<script>
+    if(localStorage.getItem("userInfo"))
+    location.href="/products"
+</script>
+<%- include("./partials/header.ejs")%>
+
+ <link rel="stylesheet" href="/styles/nav.css">
+ <script src="/javascript/nav.js"></script>
+
+ <link rel="stylesheet" href="styles/sign.css">  
+
+
+ <div class="formContainer">
+   <form onsubmit="return check()">
+       <h2 style="text-align: center;">SignIn</h2>
+       <label>Email</label>
+       <input type="email"  required name="email" onchange="uservalidation(this)"placeholder="email" />
+       <label>Password</label>
+       <input type="password"  required name="password" onchange="uservalidation(this)"placeholder="password" />
+       <div id="msg"></div>
+       <button type="submit">SignIn</button>
+       <p style="margin-bottom: 40px;" id="register"></p>
+   </form>
+</div>
+   <%- include("./partials/spinner.ejs")%>
+    <%- include("./partials/footer.ejs")%>
+<script>
+     
+  location.search?
+     document.getElementById("register").innerHTML=`New user ? <a href="/sign-up?shipping">register</a>`
+    : 
+    document.getElementById("register").innerHTML=`New user ? <a href="/sign-up?">register</a>`
+ document.getElementById("loader").style.display="none";
+    const uservarification={}
+   const uservalidation=(e)=>{
+
+       e.name=='email'? uservarification.email=e.value:uservarification.password=e.value
+    }
+   const check=()=>{
+    document.getElementById("msg").innerHTML="  "
+    document.getElementById("loader").style.display="block";
+       fetch(`${location.origin}/sign-in`,{
+           method:"POST",
+           headers:new Headers({
+               "Content-Type":"application/json"
+           }),
+           body:JSON.stringify(uservarification)
+       }).then((res)=>{
+        document.getElementById("loader").style.display="none";
+           res.json().then((data)=>{
+              if(data.email==uservarification.email)
+             { location.search?location.href=`/shipping/${data.token}`:location.href="/products"
+             localStorage.setItem("userInfo",JSON.stringify(data))
+            }
+              else
+               document.getElementById("msg").innerHTML=data
+           })
+       }) 
+    
+       return false
+   }
+</script>   

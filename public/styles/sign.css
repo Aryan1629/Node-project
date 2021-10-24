@@ -1,0 +1,52 @@
+   *{
+       margin: 0;
+       padding: 0;
+       box-sizing: border-box;
+   }
+   #msg{
+
+       color:red ;
+       font-weight: bold;
+       text-align: left;
+       font-size: 20px;
+   }
+   body{
+       background-color: white;
+   }
+        .formContainer form{
+            border: 3px solid #b33939;
+            border-top: 3px solid #ffda79;
+            border-left:  3px solid  #27ae60;
+            margin-top:70px;
+            display: flex;
+            flex-direction: column;
+            max-width: 400px;
+            width: 80%;
+            background-color: white;
+         padding: 0 20px;
+    box-shadow: 5px 5px 10px 1px rgba(206, 21, 21, 0.411);
+            
+        }
+        .formContainer{
+            display: flex;
+            justify-content: center;
+            height: 90vh;
+            align-items: center;
+        }
+        form input{
+            padding: 8px;
+            margin: 8px 0;
+            background-color: white;
+            border: 1px solid #b33939;
+            border-top: 1px solid #ffda79;
+            border-left:  1px solid  #27ae60;
+        
+        }
+        form button{
+            background-color: #b71540;;
+            color:white;
+            padding: 8px;
+            margin: 8px 0;
+           
+            border: 1px solid #f8f8f8;
+        }

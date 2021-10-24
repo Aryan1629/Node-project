@@ -1,0 +1,92 @@
+<%- include("./partials/header.ejs")%>
+<link rel="stylesheet" href="/styles/nav.css">
+<script src="/javascript/nav.js"></script>
+<link rel="stylesheet" href="/styles/show.css">
+<div class="showcontainer">
+    <div class="col1">
+        <img src="<%= elem.img%>" alt="">
+    </div>
+    <div class="col2">
+        <div class="row">
+            <h3><%= elem.name%></h3>
+            <h3>Price : &#8377 <%= elem.price%></h3>
+        </div>
+      <div class="row">
+        <h3>Description :-</h3>
+        <i class="fas fa-heart" style="margin-right: 10px; font-size: 25px;" id="wish" onclick="wish()"></i>
+      </div>
+       <span style="text-align: justify;"><%= elem.des%></span>
+       <div class="action" >
+        <div class="row">
+            <h3>Price:</h3>
+            <h3>&#8377 <%= elem.price%></h3>
+        </div>
+        <div class="row">
+            <h3>Qty:</h3>
+            <select name="" onchange="quantity(this.value)" id="qty">
+                <%for(i=1;i<=  elem.instock;i++){%>
+                    <option value="<%= i%>"><%= i%></option>
+                <%}%>
+            </select>
+        </div> 
+              <button onclick="tocart()">Add TO Cart</button>
+       </div>
+</div>
+
+<%- include("./partials/footer.ejs")%>
+
+<script>
+   let qty=1;
+    const quantity=(e)=>qty=e // taking the number of quantity that our client select
+   const tocart= async ()=>{     //  making function asynchronus 
+        // fetch(`${document.location.origin}/api/product/<%= elem.id%>`)  //feching data from API (Got promisee) 
+        // .then((res)=>{res.json()     // got response object in then of above promise  adn got another promise from res.json()
+        //         .then(data=>{      //  got data  in then from above second promise    
+        //           cartarray= localStorage.getItem("cart")?[...JSON.parse(localStorage.getItem("cart"))]:[]      // cheacking  how muh data is prsent in art
+        //           localStorage.setItem("cart", JSON.stringify([...cartarray,{quantity:Number(qty), ...data}] ))   // ading targeted items data into cart localstorage  
+        //             location.href=`/cart`    // cantroll transfer to cart page by changing the url 
+        //          })  
+        //         .catch(()=>console.log("err"))
+        //     })
+        // .catch(()=> console.log(err))
+
+try{        // trying billow content if exicuted its ok if not then catch matho will exicute
+    const res=  await fetch(`${document.location.origin}/api/product/<%= elem._id%>`), data = await res.json()    // faectching data and making came response into json format  
+    cartarray= localStorage.getItem("cart")?[...JSON.parse(localStorage.getItem("cart"))]:[]                      // await means to wait until data came  only on async function 
+    cartarray.forEach((element, index)=>{
+        if(element._id==data._id){  // checking that user has added the same item in cart that he added before or not
+           if(element.quantity+Number(qty) <= `<%= elem.instock%>`)
+           qty=element.quantity+Number(qty)
+             else{
+             alert(` Sorry, but we have only <%= elem.instock%> in stock and you have already selected ${element.quantity}`)
+             qty=`<%= elem.instock%>`
+           }
+           cartarray.splice(index,1)   // deleting the olde itme if he selected  the sae item and modifying the privious one 
+        }   
+    })
+    localStorage.setItem("cart", JSON.stringify([{quantity:Number(qty), ...data},...cartarray] ))
+    location.href=`/cart` 
+}catch(err){    // when try mathod failded to get exicute 
+    console.log(`this is an error of ${err}`)
+    }
+ }
+
+ const wish=async()=>{
+     document.getElementById("wish").classList.toggle("wished")
+     const res=  await fetch(`${document.location.origin}/api/product/<%= elem._id%>`), data = await res.json()    // faectching data and making came response into json format  
+    //  console.log(data)
+     const wishdata=localStorage.getItem("wishdata")?JSON.parse(localStorage.getItem("wishdata")):[]
+     const wishcheck=wishdata.find((element,index, array)=>element._id==data._id )
+     console.log(wishcheck)
+    if( wishcheck){
+    wishdata.splice(wishdata.indexOf(wishcheck),1)
+      localStorage.setItem("wishdata",JSON.stringify([...wishdata]))}
+      else
+     localStorage.setItem("wishdata",JSON.stringify([...wishdata,data]))
+     location.reload()
+ }
+ const wishdata=localStorage.getItem("wishdata")?JSON.parse(localStorage.getItem("wishdata")):[]
+ const wishcheck=wishdata.find((element,index, array)=>element._id==`<%= elem._id%>` )
+ wishcheck?document.getElementById("wish").style.color="red":undefined  
+//  console.log(wishcheck)
+</script>
